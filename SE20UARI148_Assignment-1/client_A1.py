@@ -1,19 +1,20 @@
+import asyncio
+import websockets
+import json
 
-import requests
+async def main():
+    async with websockets.connect("ws://localhost:5001") as websocket:
+        try:
+            while True:
+                message = input("Enter your message: ")
+                data = {"message": message}
+                await websocket.send(json.dumps(data))
+                
+                response = await websocket.recv()
+                response_data = json.loads(response)
+                response_message = response_data.get("response_message", "No response")
+                print("Server Response:", response_message)
+        except KeyboardInterrupt:
+            print("Client disconnected")
 
-# Server URL
-url = "http://139.59.28.124:5000/api/messages"
-
-# Sending a message to the server
-data = {"message": "Hello server"}
-response = requests.post(url, json=data)
-print("Server Response:", response.text)
-
-# Receiving messages from the server
-response = requests.get(url)
-if response.status_code == 200:
-    received_data = response.json()
-    server_message = received_data.get('message', '')
-    print("Received message from server:", server_message)
-else:
-    print("Failed to receive message from server.")
+asyncio.get_event_loop().run_until_complete(main())
