@@ -3,7 +3,7 @@ import websockets
 import json
 
 async def main():
-    async with websockets.connect("ws://localhost:5001") as websocket:
+    async with websockets.connect("ws://139.59.28.124:5001") as websocket:
         try:
             while True:
                 message = input("Enter your message: ")
